@@ -17,20 +17,20 @@
 ##fixed parameters
 #odoo
 OE_USER="odoo"
-OE_HOME="/$OE_USER"
-OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
+OE_HOME="/opt/$OE_USER"
+OE_HOME_EXT="/opt/$OE_USER/${OE_USER}-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 #Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="True"
 #Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
-OE_PORT="8069"
+OE_PORT="8099"
 #Choose the Odoo version which you want to install. For example: 11.0, 10.0, 9.0 or saas-18. When using 'master' the master version will be installed.
 #IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 11.0
 OE_VERSION="11.0"
 # Set this to True if you want to install Odoo 11 Enterprise!
 IS_ENTERPRISE="False"
 #set the superadmin password
-OE_SUPERADMIN="admin"
+OE_SUPERADMIN="6282263"
 OE_CONFIG="${OE_USER}-server"
 
 ##
@@ -62,13 +62,17 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
 sudo apt-get install python3 python3-pip
+sudo pip3 install --upgrade pip
 
 echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git bzr python-pip gdebi-core -y
 
 echo -e "\n---- Install python packages ----"
 sudo apt-get install python-pypdf2 python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-pil -y
-sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml psycopg2 psutil html2text docutils lxml pillow reportlab ninja2 requests gdata XlsxWriter vobject python-openid pyparsing pydot mock mako Jinja2 ebaysdk feedparser xlwt psycogreen suds-jurko pytz pyusb greenlet xlrd 
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+sudo dpkg-reconfigure locales
+sudo pip3 install Babel decorator docutils ebaysdk feedparser gevent greenlet html2text Jinja2 lxml Mako MarkupSafe mock num2words ofxparse passlib Pillow psutil psycogreen psycopg2 pydot pyparsing PyPDF2 pyserial python-dateutil python-openid pytz pyusb PyYAML qrcode reportlab requests six suds-jurko vatnumber vobject Werkzeug XlsxWriter xlwt xlrd gdata ninja2 
 
 echo -e "\n---- Install python libraries ----"
 # This is for compatibility with Ubuntu 16.04. Will work on 14.04, 15.04 and 16.04
@@ -133,7 +137,6 @@ if [ $IS_ENTERPRISE = "True" ]; then
 
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
-    sudo pip3 install num2words ofxparse
     sudo apt-get install nodejs npm
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
